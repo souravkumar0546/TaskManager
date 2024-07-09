@@ -14,11 +14,11 @@ const TaskList = ({ tasks, fetchTasks }) => {
     }
   };
 
-  const handleDeleteTask = async (taskId) => {
+  const handleDeleteTask = async (taskId,title) => {
     try {
       await ApiService.deleteTask(taskId);
       fetchTasks();
-      console.log(`Deleted task ${taskId}`);
+      alret(`Deleted task- ${title}`);
     } catch (error) {
       console.error(`Failed to delete task ${taskId}`, error);
     }
@@ -56,7 +56,7 @@ const TaskList = ({ tasks, fetchTasks }) => {
               <option value="In Progress">In Progress</option>
               <option value="Done">Done</option>
             </select>
-            <button className="btn btn-danger icon-light-black" aria-label="Delete Task" onClick={() => handleDeleteTask(task.id)}>
+            <button className="btn btn-danger icon-light-black" aria-label="Delete Task" onClick={() => handleDeleteTask(task.id,task.title)}>
               <i className="bi bi-trash"></i> 
             </button>
           </div>
