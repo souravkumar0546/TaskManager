@@ -49,7 +49,6 @@ const NewTaskForm = () => {
             rows="3"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            required
           ></textarea>
         </div>
         <div className="form-group mt-2">
