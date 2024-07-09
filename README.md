@@ -29,7 +29,7 @@ The application is live at the following URLs:
 
     ```bash
     git clone https://github.com/souravkumar0546/TaskManager
-    cd frontend
+    cd backend
     ```
 
 2. Install dependencies:
