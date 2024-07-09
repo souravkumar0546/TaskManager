@@ -1,0 +1,16 @@
+
+.task-to-do {
+  background-color: lightcoral;
+}
+
+.task-in-progress {
+  background-color: lightyellow;
+}
+
+.task-done {
+  background-color: lightgreen;
+}
+
+.icon-light-black {
+  background-color: #333 !important; 
+}

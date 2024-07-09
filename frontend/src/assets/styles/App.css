@@ -1,0 +1,23 @@
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  body::before {
+    content: '';
+    background-image: url('../images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    filter: blur(10px); /* Adjust the blur intensity as needed */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1; /* Ensure the background is behind other content */
+  }
+  
