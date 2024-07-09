@@ -18,7 +18,7 @@ const TaskList = ({ tasks, fetchTasks }) => {
     try {
       await ApiService.deleteTask(taskId);
       fetchTasks();
-      alret(`Deleted task- ${title}`);
+      alert(`Deleted task- ${title}`);
     } catch (error) {
       console.error(`Failed to delete task ${taskId}`, error);
     }
