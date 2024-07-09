@@ -29,7 +29,7 @@ The application is live at the following URLs:
 
     ```bash
     git clone https://github.com/souravkumar0546/TaskManager
-    cd task-manager/backend
+    cd frontend
     ```
 
 2. Install dependencies:
@@ -62,7 +62,7 @@ The application is live at the following URLs:
 1. Navigate to the `frontend` directory:
 
     ```bash
-    cd task-manager/frontend
+    cd frontend
     ```
 
 2. Install dependencies:
