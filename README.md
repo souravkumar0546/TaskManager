@@ -50,7 +50,6 @@ The application is live at the following URLs:
     APP_URL=your_frontend_app_url
     ```
 
-    > Note: You can create a `.env` file by copying the provided `.env.example` file and filling in your values.
 
 4. Run the backend server:
 
