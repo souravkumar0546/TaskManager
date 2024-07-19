@@ -36,7 +36,7 @@ func writeResponse(w http.ResponseWriter, response interface{}, err error) {
 // writeErrorResponse creates an error response and writes to the user.
 func writeErrorResponse(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("API_URL"))
+	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("APP_URL"))
 	statusCode := internal_errors.GetStatusFromError(err)
 	w.WriteHeader(statusCode)
 	type genericError struct {
