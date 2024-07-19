@@ -10,9 +10,6 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
-
-var APP_URL = os.Getenv("APP_URL")
-
 func InitRouter() http.Handler {
 	router := mux.NewRouter()
 
@@ -47,5 +44,5 @@ func InitRouter() http.Handler {
 }
 
 func getAllowedOrigins() []string {
-	return []string{APP_URL}
+	return []string{os.Getenv("APP_URL")}
 }
