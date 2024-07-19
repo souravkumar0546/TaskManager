@@ -73,7 +73,7 @@ The application is live at the following URLs:
 
 3. Update Backend URL:
     - Navigate to `src/services/apiService.js`.
-    - Locate and update the `API_URL` constant with your deployed backend URL.
+    - Locate and update the `API_URL` constant with your backend URL.
 
 4. Run the frontend development server:
 
