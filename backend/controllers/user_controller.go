@@ -13,7 +13,7 @@ import (
 	"task-manager-backend/utils"
 )
 
-var API_URL = os.Getenv("API_URL")
+
 
 const (
 	uploadsDir = "./user_data/avatar" // Directory where uploaded images will be stored
@@ -77,7 +77,7 @@ func UpdateAvatar(w http.ResponseWriter, r *http.Request) {
 
 	// Update user's avatar URL in the database
 
-	avatarURL := API_URL + "/avatars/" + filename
+	avatarURL := os.Getenv("API_URL") + "/avatars/" + filename
 
 	_, err = utils.DB.Exec("UPDATE users SET avatar=$1 WHERE id=$2", avatarURL, userID)
 	if err != nil {
