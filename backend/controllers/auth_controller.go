@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"os"
 
 	"task-manager-backend/internal_errors"
 	"task-manager-backend/models"
@@ -18,7 +19,7 @@ import (
 
 var JwtKey = []byte("my_secret_key")
 
-var defaultAvatar = API_URL + "/avatars/defaultpic.png"
+var defaultAvatar = os.Getenv("API_URL") + "/avatars/defaultpic.png"
 
 type Claims struct {
 	UserID int `json:"userID"`
