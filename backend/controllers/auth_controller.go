@@ -18,7 +18,6 @@ import (
 )
 
 var JwtKey = []byte("my_secret_key")
-
 var defaultAvatar = os.Getenv("API_URL") + "/avatars/defaultpic.png"
 
 type Claims struct {
@@ -30,14 +29,14 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	var req SignUpRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		writeResponse(w, nil, internal_errors.ErrInvalidRequestPayload)
+		writeResponse(w, nil, internal_errors.ErrInvalidRequestPayload, r)
 		return
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		log.Println("Error hashing password")
-		writeResponse(w, nil, internal_errors.ErrInternalError)
+		writeResponse(w, nil, internal_errors.ErrInternalError, r)
 		return
 	}
 
@@ -47,26 +46,26 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok {
 			if pqErr.Code == "23505" { // unique_violation
-				writeResponse(w, nil, internal_errors.ErrEmailAlreadyExists)
+				writeResponse(w, nil, internal_errors.ErrEmailAlreadyExists, r)
 				return
 			}
 		}
 		log.Println(err)
-		writeResponse(w, nil, internal_errors.ErrInternalError)
+		writeResponse(w, nil, internal_errors.ErrInternalError, r)
 		return
 	}
 
 	resp := &SignUpResponse{
 		Email: req.Email,
 	}
-	writeResponse(w, resp, nil)
+	writeResponse(w, resp, nil, r)
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
 	var req LogInRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		writeResponse(w, nil, internal_errors.ErrInvalidRequestPayload)
+		writeResponse(w, nil, internal_errors.ErrInvalidRequestPayload, r)
 		return
 	}
 
@@ -74,15 +73,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	err = utils.DB.QueryRow("SELECT id, email, name, password FROM users WHERE email=$1", req.Email).Scan(&storedCreds.ID, &storedCreds.Email, &storedCreds.Name, &storedCreds.Password)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			writeResponse(w, nil, internal_errors.ErrInvalidEmail)
+			writeResponse(w, nil, internal_errors.ErrInvalidEmail, r)
 			return
 		}
-		writeResponse(w, nil, internal_errors.ErrInternalError)
+		writeResponse(w, nil, internal_errors.ErrInternalError, r)
 		return
 	}
 
 	if err = bcrypt.CompareHashAndPassword([]byte(storedCreds.Password), []byte(req.Password)); err != nil {
-		writeResponse(w, nil, internal_errors.ErrInvalidPassword)
+		writeResponse(w, nil, internal_errors.ErrInvalidPassword, r)
 		return
 	}
 
@@ -97,7 +96,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(JwtKey)
 	if err != nil {
-		writeResponse(w, nil, internal_errors.ErrInternalError)
+		writeResponse(w, nil, internal_errors.ErrInternalError, r)
 		return
 	}
 
@@ -114,7 +113,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	resp := &LogInResponse{
 		User: &storedCreds,
 	}
-	writeResponse(w, resp, nil)
+	writeResponse(w, resp, nil, r)
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
@@ -130,5 +129,5 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 	// Send a response indicating successful logout
 	w.WriteHeader(http.StatusOK)
-	writeResponse(w, map[string]string{"message": "Logged out successfully"}, nil)
+	writeResponse(w, map[string]string{"message": "Logged out successfully"}, nil, r)
 }

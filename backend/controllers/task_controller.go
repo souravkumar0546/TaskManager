@@ -16,13 +16,13 @@ import (
 func GetTasks(w http.ResponseWriter, r *http.Request) {
 	userID, err := fetch_user_id(r)
 	if err != nil {
-		writeResponse(w, nil, err)
+		writeResponse(w, nil, err, r) // Include r
 		return
 	}
 	rows, err := utils.DB.Query("SELECT id, title, description, status FROM tasks WHERE user_id=$1", userID)
 	if err != nil {
 		log.Println(err)
-		writeResponse(w, nil, internal_errors.ErrInternalError)
+		writeResponse(w, nil, internal_errors.ErrInternalError, r) // Include r
 		return
 	}
 	defer rows.Close()
@@ -32,7 +32,7 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 		var task models.Task
 		err := rows.Scan(&task.ID, &task.Title, &task.Description, &task.Status)
 		if err != nil {
-			writeResponse(w, nil, internal_errors.ErrInternalError)
+			writeResponse(w, nil, internal_errors.ErrInternalError, r) // Include r
 			return
 		}
 		tasks = append(tasks, task)
@@ -41,34 +41,33 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 	resp := &GetTasksResponse{
 		Tasks: tasks,
 	}
-	writeResponse(w, resp, nil)
+	writeResponse(w, resp, nil, r) // Include r
 }
 
 func CreateTask(w http.ResponseWriter, r *http.Request) {
 	userID, err := fetch_user_id(r)
 	if err != nil {
-		writeResponse(w, nil, err)
+		writeResponse(w, nil, err, r) // Include r
 		return
 	}
 	var task models.Task
 	err = json.NewDecoder(r.Body).Decode(&task)
 	if err != nil {
-		writeResponse(w, nil, internal_errors.ErrInvalidRequestPayload)
+		writeResponse(w, nil, internal_errors.ErrInvalidRequestPayload, r) // Include r
 		return
 	}
 
 	_, err = utils.DB.Exec("INSERT INTO tasks (title, description, status, user_id) VALUES ($1, $2, $3, $4)", task.Title, task.Description, task.Status, userID)
 	if err != nil {
 		log.Println(err)
-		writeResponse(w, nil, internal_errors.ErrInternalError)
+		writeResponse(w, nil, internal_errors.ErrInternalError, r) // Include r
 		return
 	}
 
 	resp := &GetTaskResponse{
 		Task: &task,
 	}
-
-	writeResponse(w, resp, nil)
+	writeResponse(w, resp, nil, r) // Include r
 }
 
 func UpdateTask(w http.ResponseWriter, r *http.Request) {
@@ -76,26 +75,26 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
 		log.Println("Invalid Task ID")
-		writeResponse(w, nil, internal_errors.ErrInvalidRequestPayload)
+		writeResponse(w, nil, internal_errors.ErrInvalidRequestPayload, r) // Include r
 		return
 	}
 
 	userID, err := fetch_user_id(r)
 	if err != nil {
-		writeResponse(w, nil, err)
+		writeResponse(w, nil, err, r) // Include r
 		return
 	}
 
 	var req UpdateTaskRequest
 	err = json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		writeResponse(w, nil, internal_errors.ErrInvalidRequestPayload)
+		writeResponse(w, nil, internal_errors.ErrInvalidRequestPayload, r) // Include r
 		return
 	}
 
 	_, err = utils.DB.Exec("UPDATE tasks SET status=$1 WHERE id=$2 AND user_id=$3", req.TaskStatus, id, userID)
 	if err != nil {
-		writeResponse(w, nil, internal_errors.ErrInternalError)
+		writeResponse(w, nil, internal_errors.ErrInternalError, r) // Include r
 		return
 	}
 
@@ -105,8 +104,7 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 			Status: req.TaskStatus,
 		},
 	}
-
-	writeResponse(w, resp, nil)
+	writeResponse(w, resp, nil, r) // Include r
 }
 
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
@@ -114,18 +112,18 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
 		log.Println("Invalid Task ID")
-		writeResponse(w, nil, internal_errors.ErrInvalidRequestPayload)
+		writeResponse(w, nil, internal_errors.ErrInvalidRequestPayload, r) // Include r
 		return
 	}
 
 	userID, err := fetch_user_id(r)
 	if err != nil {
-		writeResponse(w, nil, err)
+		writeResponse(w, nil, err, r) // Include r
 		return
 	}
 	_, err = utils.DB.Exec("DELETE FROM tasks WHERE id=$1 AND user_id=$2", id, userID)
 	if err != nil {
-		writeResponse(w, nil, internal_errors.ErrInternalError)
+		writeResponse(w, nil, internal_errors.ErrInternalError, r) // Include r
 		return
 	}
 
