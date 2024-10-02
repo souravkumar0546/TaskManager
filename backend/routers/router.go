@@ -43,6 +43,14 @@ func InitRouter() http.Handler {
 	return cors(router)
 }
 
+// func getAllowedOrigins() []string {
+// 	return []string{os.Getenv("APP_URL")}
+// }
 func getAllowedOrigins() []string {
-	return []string{os.Getenv("APP_URL" || "http://localhost:3000/login")}
+    appUrl := os.Getenv("APP_URL")  // Get the live backend URL from environment variables
+    return []string{
+        appUrl,                     // Live backend URL
+        "http://localhost:3000",     // Localhost for React, Vue, etc. (adjust the port as needed)
+        "http://127.0.0.1:3000",     // Localhost IP address (alternative to localhost)
+    }
 }
