@@ -44,5 +44,5 @@ func InitRouter() http.Handler {
 }
 
 func getAllowedOrigins() []string {
-	return []string{os.Getenv("APP_URL")}
+	return []string{os.Getenv("APP_URL" || "http://localhost:3000/login")}
 }
