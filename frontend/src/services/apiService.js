@@ -1,4 +1,4 @@
-const API_URL = "https://task-manager-ov06.onrender.com";
+const API_URL = "https://taskmanager-9ij0.onrender.com";
 
 
 const ApiService = {
